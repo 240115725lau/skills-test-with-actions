@@ -29,15 +29,35 @@ Protected branches ensure that collaborators on your repository cannot make irre
 
 ### :keyboard: Activity: Add branch protections
 
-1. Go to **Branches** settings. You can navigate to that page manually by selecting the right-most tab in the top of the repository called **Settings** and then clicking **Branches**.
-1. Click **Add classic branch protection rule** under "Branch protection rules".
-1. Type `main` in **Branch name pattern**.
-1. Check **Require a pull request before merging**.
-1. Uncheck **Require approvals**.
-1. Check **Require status checks to pass before merging**.
-1. Check all build and test jobs that you'd like to see in the newly visible gray box.
-1. Click **Create**.
-1. _Once you turn on branch protection, Actions can no longer push directly to the `main` branch. Wait about 20 seconds and then go to the `ci` branch. [GitHub Actions](https://docs.github.com/actions) will automatically update to the next step on the `ci` branch. You'll need to follow instructions on this branch._
+
+
+You can follow along as GitHub Actions runs your job by going to the __Actions__ tab or by clicking "Details" in the merge box below.
+
+
+   ```yml
+   build:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+
+       - name: Run markdown lint
+         run: |
+           npm install remark-cli remark-preset-lint-consistent vfile-reporter-json
+           npx remark . --use remark-preset-lint-consistent --report vfile-reporter-json 2> remark-lint-report.json
+
+       - uses: actions/upload-artifact@v4
+         with:
+           name: remark-lint-report
+           path: remark-lint-report.json
+   ```
+
+
+1. Commit your change to this branch.
+
+1. Wait about 20 seconds and then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/actions) will automatically update to the next step.
+
+Like the upload action to send artifacts to the storage, you can use the download action to download these previously uploaded artifacts from the `build` job: [`actions/download-artifact`](https://github.com/actions/download-artifact). For brevity, we'll skip that step for this course.
+
 
 <footer>
 
